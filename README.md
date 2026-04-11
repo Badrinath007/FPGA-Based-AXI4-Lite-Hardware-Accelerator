@@ -1,55 +1,108 @@
-# FPGA-based-axi4-lite-hardware-accelerator-controlled-via-uart-bridge
+# UART-to-AXI4-Lite Bridge for FPGA Accelerator
 
-📌 Project Overview
-- This project implements a hardware acceleration system on an Altera Cyclone IV FPGA.
-- It features a custom AXI4-Lite Slave interface that receives vector data from a PC via UART.
-- The system performs vector addition using a FIFO-buffered architecture and displays results through physical onboard LEDs.
-- To bridge the 5V logic of the USB-UART module with the 3.3V requirements of the FPGA, a custom voltage divider circuit was designed and implemented.
+## 📌 Overview
 
-🚀 Key FeaturesProtocol
-- AXI4-Lite compliant register interface.
-- Communication: UART serial interface at 115200 Baud Rate.
-- Processing: High-speed Vector Addition with synchronous FIFO buffering.
-- Hardware Safety: 3-resistor voltage divider (5V to ~3.3V level shifting).
-- UI: 5-bit LED output for real-time status and result verification.
+This project implements a UART-controlled hardware accelerator using an AXI4-Lite interface on FPGA.
 
-🛠️ System Architecture
-The design is modular and consists of the following
-- RTL components:baud_gen: Generates sampling ticks for serial synchronization.
-- uart_rx: Deserializes incoming 8-bit data from the UART bridge.
-- axi_lite_slave: Manages the AXI4-Lite write handshakes (AWVALID, WVALID, BVALID).
-- vector_add_with_fifo_accel: The processing core that performs the arithmetic.
-- top: The top-level wrapper for pin mapping and signal routing.
+The system allows a host PC to communicate with an FPGA accelerator via UART, enabling register read/write operations through a custom AXI4-Lite bridge.
 
-🔌 Hardware SetupComponents Used:
-- Altera Cyclone IV (EP4CE6) Development Board.
-- CP2102 USB-to-UART TTL Module.
-- 3x 1kΩ Resistors (Voltage Divider).
-- Breadboard and Jumper Wires.
-- Connection Table:ConnectionFromToSignal (TX)CP2102 TXFPGA PIN_23 (via Divider)GroundCP2102 GNDFPGA GND (Common Rail)ResetN/AOnboard Push ButtonExecuteN/AOnboard Push Button
+This design mimics real-world SoC architectures where peripherals are accessed through memory-mapped interfaces.
 
-💻 Software & ToolsQuartus Prime: 
-- Synthesis and Bitstream generation.
-- CuteCom: Serial terminal for sending vector data from Ubuntu.
-- Verilog HDL: Hardware Description Language used for RTL.
+---
 
-📖 How to RunClone the Repo:
+## 🏗️ System Architecture
 
-Bashgit clone https://github.com/your-username/FPGA-AXI-Accelerator.git
+PC (Terminal)
+↓
+UART RX
+↓
+Command Decoder
+↓
+AXI4-Lite Master Interface
+↓
+Hardware Accelerator (AXI Slave Registers)
+↓
+Result → UART TX → PC
 
-Synthesis: Open the project in Quartus, assign pins using the Pin Planner, and compile to generate the .sof file.Hardware Connection: Set up the voltage divider as shown in the schematics (TX $\rightarrow$ R1 $\rightarrow$ FPGA RX @ 3.3V).Deployment: Program the FPGA and open CuteCom (115200 Baud).Operation: Send two hex values (A and B). Press the start button on the FPGA to see the sum on the LEDs.
+---
 
-📂 Project Structure
+## ⚙️ Design Components
 
-Plaintext├── rtl/
-│   ├── baud_gen.v
-│   ├── uart_rx.v
-│   ├── axi_lite_slave.v
-│   ├── vector_add_with_fifo_accel.v
-│   └── top.v
-├── constraints/
-│   └── pin_assignments.qsf
-└── README.md
+### 1. UART Interface
 
+* Implements asynchronous serial communication (TX/RX)
+* Configurable baud rate
+* Handles byte-level data transfer
 
-👤 AuthorBadrinath AyyamperumalElectronics and Communication Engineering
+### 2. UART Command Decoder
+
+* Parses incoming UART commands
+* Converts them into AXI read/write transactions
+
+### 3. AXI4-Lite Master
+
+* Generates AXI transactions (address, data, control)
+* Interfaces with hardware accelerator registers
+
+### 4. Hardware Accelerator (AXI Slave)
+
+* Memory-mapped register interface
+* Performs computation based on input data
+
+---
+
+## 🧪 Simulation & Verification
+
+* Verified UART transmission and reception
+* Tested AXI read/write transactions
+* Validated correct register access via simulation waveforms
+
+(Add GTKWave screenshots here)
+
+---
+
+## 🧠 FPGA Implementation
+
+* Implemented on Cyclone IV FPGA
+* UART connected via USB-to-Serial interface
+* Tested using CuteCom
+
+### Demo:
+
+* User sends command from PC
+* FPGA processes via AXI interface
+* Result returned over UART
+
+---
+
+## 📊 Key Features
+
+* UART-to-AXI protocol bridging
+* Memory-mapped register control
+* Modular RTL design
+* Hardware validation on FPGA
+
+---
+
+## 🛠️ Tools Used
+
+* Verilog / SystemVerilog
+* Quartus Prime
+* GTKWave
+
+---
+
+## 🚧 Challenges & Learnings
+
+* Handling AXI handshake signals correctly
+* Synchronizing UART data with AXI transactions
+* Debugging hardware communication issues
+
+---
+
+## 🔮 Future Improvements
+
+* Add FIFO buffering for UART
+* Support burst transactions
+* Extend to AXI4 / AXI-Stream
+* Integrate with RISC-V core
