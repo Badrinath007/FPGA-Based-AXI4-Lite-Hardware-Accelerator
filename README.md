@@ -2,11 +2,13 @@
 
 ## Overview
 
-- This project implements a UART-controlled hardware accelerator using an AXI4-Lite interface on FPGA.
+The system bridges low-speed serial communication (UART) with a standard on-chip bus (AXI4-Lite), replicating how real-world SoCs expose peripherals for software control.
 
-- The system allows a host PC to communicate with an FPGA accelerator via UART, enabling register read/write operations through a custom AXI4-Lite bridge.
+---
 
-- This design mimics real-world SoC architectures where peripherals are accessed through memory-mapped interfaces.
+## Block Diagram
+
+<img width="1536" height="1024" alt="Block Diagram" src="https://github.com/user-attachments/assets/5d0b51d7-67ca-4c65-af0f-7401e007c77b" />
 
 ---
 
@@ -33,6 +35,24 @@ Hardware Accelerator (AXI Slave Registers)
 ↓
 
 Result → UART TX → PC
+
+---
+
+## 🧾 UART Command Format
+
+The system accepts simple commands over UART to perform AXI read/write operations.
+
+### Example:
+
+WRITE <address> <data>  
+READ  <address>
+
+### Sample Interaction:
+
+WRITE 0x00 0x05  
+READ  0x04  
+
+→ FPGA processes command and returns result over UART
 
 ---
 
@@ -77,15 +97,23 @@ Result → UART TX → PC
 * UART connected via USB-to-Serial interface
 * Tested using CuteCom
 
-### Demo:
+## FPGA Implementation
 
-* User sends command from PC
-* FPGA processes via AXI interface
-* Result returned over UART
+- Target Device: Cyclone IV FPGA
+- UART connected via USB-to-Serial interface
 
----
+### Hardware Demo:
 
-## Key Features
+1. User sends command from PC terminal  
+2. UART receives and decodes command  
+3. AXI transaction executed on accelerator  
+4. Result transmitted back over UART  
+
+Example:
+Input  → WRITE 0x00 0x05  
+Output → Computed result returned via UART
+
+## 🔑 Key Features
 
 * UART-to-AXI protocol bridging
 * Memory-mapped register control
@@ -101,6 +129,15 @@ Result → UART TX → PC
 * GTKWave
 
 ---
+
+## 📊 Results
+
+- Successful UART-to-AXI communication established
+- Correct register read/write verified on hardware
+- System demonstrates reliable PC-to-FPGA control interface
+
+---
+
 
 ## Challenges & Learnings
 
