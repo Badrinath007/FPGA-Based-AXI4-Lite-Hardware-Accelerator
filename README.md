@@ -73,6 +73,9 @@ READ  0x04
 
 * Generates AXI transactions (address, data, control)
 * Interfaces with hardware accelerator registers
+* Implements AXI valid-ready handshake protocol
+* Handles write and read transactions independently
+* Ensures proper synchronization between UART input and AXI operations
 
 ### 4. Hardware Accelerator (AXI Slave)
 
@@ -84,18 +87,14 @@ READ  0x04
 ## Simulation & Verification
 
 * Verified UART transmission and reception
+* Verified at 115200 baud UART communication
+* Successfully executed multiple read/write transactions without data loss
 * Tested AXI read/write transactions
 * Validated correct register access via simulation waveforms
 
 (Add GTKWave screenshots here)
 
 ---
-
-## FPGA Implementation
-
-* Implemented on Cyclone IV FPGA
-* UART connected via USB-to-Serial interface
-* Tested using CuteCom
 
 ## FPGA Implementation
 
