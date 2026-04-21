@@ -1,4 +1,4 @@
-# UART-Controlled AXI4-Lite FPGA Accelerator
+# FPGA-Based AXI4-Lite Hardware Accelerator
 
 ## Overview
 
