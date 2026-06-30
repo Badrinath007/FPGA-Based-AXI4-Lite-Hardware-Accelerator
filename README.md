@@ -55,6 +55,15 @@ Provides runtime visibility using FPGA resources:
 
 ---
 
+## RTL File Structure & Version History
+
+Active hierarchy (synthesizable, current):
+- `top.v` → `axi_accel_slave.v` → `vector_add_with_fifo_accel.v`
+
+`vector_add_accel.v` is an earlier, non-FIFO version of the compute core. It was superseded by `vector_add_with_fifo_accel.v`, which adds an input-capture register stage (`valid_in`) ahead of the add operation. `vector_add_accel.v` is retained in the repo for reference only and is not part of the current build — it is not instantiated anywhere in the active design.
+
+---
+
 ## Block Diagram (Conceptual Flow)
 
 The system is organized as a sequential hardware flow:
